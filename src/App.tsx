@@ -19,6 +19,10 @@ import Dashboard from "./components/Dashboard.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import CampaignAnalytics from "./components/Campaignanalytics.tsx";
 import ListYourBusiness from "./components/Listyourbusiness.tsx";
+import SellProperty from "./components/SellProperty.tsx";
+import BuyPropertiesPage from "./components/Buypropertiespage.tsx";
+import RentPropertiesPage from "./components/Rentpropertiespage.tsx";
+import PropertiesPage from "./components/PropertyPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +48,13 @@ const App = () => (
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/analytics" element={<CampaignAnalytics />} />
              <Route path="/list-your-business" element={<ListYourBusiness />} />
+             <Route path="/sell-your-property" element={<SellProperty />} />
+             <Route path="/buy-property" element={<BuyPropertiesPage />} />
+             <Route path="/rent-property" element={<RentPropertiesPage />} />
+             <Route path="/properties" element={<PropertiesPage />} />
+
+
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

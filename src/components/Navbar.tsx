@@ -3,25 +3,24 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "shehar_ludhiana_user";
-const REDIRECT_KEY = "shehar_ludhiana_redirect"; // saves intended destination before login
-
-const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Explore", path: "/explore" },
-  { label: "Areas", path: "/areas" },
-  { label: "Blogs", path: "/blogs" },
-  { label: "Write Blog", path: "/write-blog" },
-  { label: "Events", path: "/events" },
-];
+const REDIRECT_KEY = "shehar_ludhiana_redirect";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ phone?: string; name?: string; loginMethod?: string } | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [blogsOpen, setBlogsOpen] = useState(false);
+  const [propertiesOpen, setPropertiesOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{
+    phone?: string;
+    name?: string;
+    loginMethod?: string;
+  } | null>(null);
 
-  // Read user from localStorage on mount + on every route change
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const blogsRef = useRef<HTMLDivElement>(null);
+  const propertiesRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -31,23 +30,19 @@ const Navbar = () => {
     }
   }, [location.pathname]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
         setDropdownOpen(false);
-      }
+      if (blogsRef.current && !blogsRef.current.contains(e.target as Node))
+        setBlogsOpen(false);
+      if (propertiesRef.current && !propertiesRef.current.contains(e.target as Node))
+        setPropertiesOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /**
-   * "List Your Business Free" button click:
-   *  - If logged in  → go directly to /list-your-business
-   *  - If NOT logged in → save intended redirect to localStorage, then go to /login
-   *    After login, LoginPage will read this redirect and send user to /list-your-business
-   */
   const handleListBusiness = () => {
     if (currentUser) {
       navigate("/list-your-business");
@@ -57,12 +52,7 @@ const Navbar = () => {
     }
   };
 
-  /**
-   * "Login" button click (direct):
-   *  - No saved redirect → after login, LoginPage sends user to /dashboard
-   */
   const handleLoginClick = () => {
-    // Clear any existing redirect so direct login goes to dashboard
     localStorage.removeItem(REDIRECT_KEY);
     navigate("/login");
   };
@@ -75,7 +65,53 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const displayName = currentUser?.name ?? (currentUser?.phone ? `+91 ${currentUser.phone}` : "User");
+  const displayName =
+    currentUser?.name ?? (currentUser?.phone ? `+91 ${currentUser.phone}` : "User");
+
+  // Properties dropdown items
+  const propertyLinks = [
+    {
+      label: "Buy Properties",
+      path: "/buy-property?type=buy",
+      icon: (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+      ),
+    },
+    {
+      label: "Sell Properties",
+      path: "/sell-your-property?type=sell",
+      icon: (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="16" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
+      ),
+    },
+    {
+      label: "Rent Properties",
+      path: "/rent-property?type=rent",
+      icon: (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+        </svg>
+      ),
+    },
+    {
+      label: "All Properties",
+      path: "/properties",
+      icon: (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 10H3M21 6H3M21 14H3M21 18H3" />
+        </svg>
+      ),
+      divider: true,
+    },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
@@ -88,7 +124,11 @@ const Navbar = () => {
 
         {/* Nav Links */}
         <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {[
+            { label: "Home", path: "/" },
+            { label: "Explore", path: "/explore" },
+            { label: "Areas", path: "/areas" },
+          ].map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -99,17 +139,113 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
+
+          {/* Blogs Dropdown */}
+          <div className="relative" ref={blogsRef}>
+            <button
+              onClick={() => {
+                setBlogsOpen((p) => !p);
+                setPropertiesOpen(false);
+              }}
+              className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+                blogsOpen ? "text-primary" : "text-foreground"
+              }`}
+            >
+              Blogs
+              <svg
+                width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                className={`transition-transform ${blogsOpen ? "rotate-180" : ""}`}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+
+            {blogsOpen && (
+              <div className="absolute left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                <button
+                  onClick={() => { navigate("/write-blog"); setBlogsOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                  </svg>
+                  Write Blog
+                </button>
+                <button
+                  onClick={() => { navigate("/blogs"); setBlogsOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2" />
+                    <line x1="7" y1="9" x2="17" y2="9" />
+                    <line x1="7" y1="13" x2="13" y2="13" />
+                  </svg>
+                  View Blogs
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Properties Dropdown */}
+          <div className="relative" ref={propertiesRef}>
+            <button
+              onClick={() => {
+                setPropertiesOpen((p) => !p);
+                setBlogsOpen(false);
+              }}
+              className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+                propertiesOpen ||
+                location.pathname.startsWith("/properties")
+                  ? "text-primary"
+                  : "text-foreground"
+              }`}
+            >
+              Properties
+              <svg
+                width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                className={`transition-transform ${propertiesOpen ? "rotate-180" : ""}`}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+
+            {propertiesOpen && (
+              <div className="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                {propertyLinks.map((link) => (
+                  <div key={link.path}>
+                    {link.divider && <div className="border-t border-gray-100 my-1" />}
+                    <button
+                      onClick={() => { navigate(link.path); setPropertiesOpen(false); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      {link.icon}
+                      {link.label}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <Link
+            to="/events"
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              location.pathname === "/events" ? "text-primary" : "text-foreground"
+            }`}
+          >
+            Events
+          </Link>
         </nav>
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-
-          {/* List Your Business Button */}
           <Button size="sm" onClick={handleListBusiness}>
             List Your Business Free
           </Button>
 
-          {/* Logged in: User dropdown | Not logged in: Login button */}
           {currentUser ? (
             <div className="relative" ref={dropdownRef}>
               <button
@@ -138,7 +274,6 @@ const Navbar = () => {
                     <p className="text-xs font-semibold text-gray-800 truncate">{displayName}</p>
                     <p className="text-xs text-gray-400 capitalize">{currentUser.loginMethod ?? "phone"} login</p>
                   </div>
-
                   <button
                     onClick={() => { navigate("/dashboard"); setDropdownOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -151,7 +286,6 @@ const Navbar = () => {
                     </svg>
                     Dashboard
                   </button>
-
                   <button
                     onClick={() => { navigate("/profile"); setDropdownOpen(false); }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -162,14 +296,13 @@ const Navbar = () => {
                     </svg>
                     Profile
                   </button>
-
                   <div className="border-t border-gray-100 mt-1">
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
                     >
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
                         <polyline points="16 17 21 12 16 7" />
                         <line x1="21" y1="12" x2="9" y2="12" />
                       </svg>
