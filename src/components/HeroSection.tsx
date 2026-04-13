@@ -1,8 +1,17 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroImage from "../assets/hero-ludhiana.jpg";
+import heroImage from "@/assets/hero-ludhiana.jpg";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
+  const handleSearch = () => {
+    if (search.trim()) navigate(`/search?q=${encodeURIComponent(search)}`);
+  };
+
   return (
     <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
       <img
@@ -30,21 +39,25 @@ const HeroSection = () => {
             type="text"
             placeholder="Search for restaurants, shops, services..."
             className="flex-1 px-6 py-3 bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
-          <Button className="rounded-full px-6 gap-2">
+          <Button className="rounded-full px-6 gap-2" onClick={handleSearch}>
             <Search className="w-4 h-4" />
             Search
           </Button>
         </div>
 
         <div className="flex items-center justify-center gap-4 mt-6">
-          <Button size="lg">
+          <Button size="lg" onClick={() => navigate("/explore")}>
             List Your Business Free
           </Button>
           <Button
             variant="outline"
             size="lg"
             className="bg-background/20 border-primary-foreground/30 text-primary-foreground hover:bg-background/30"
+            onClick={() => navigate("/explore")}
           >
             Explore Businesses
           </Button>

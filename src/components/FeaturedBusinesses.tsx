@@ -7,8 +7,8 @@ import bizGym from "@/assets/biz-gym.jpg";
 
 const featured = [
   { name: "Punjab Grill Restaurant", category: "Fine Dining", image: bizRestaurant, rating: 4.8, reviewCount: 234, price: "₹₹₹", location: "Model Town, Ludhiana", hours: "Open until 11:00 PM" },
-  { name: "Fashion Hub Mall", category: "Shopping", image:bizMall, rating: 4.6, reviewCount: 189, price: "₹₹", location: "Sarabha Nagar, Ludhiana", hours: "Open until 10:00 PM" },
-  { name: "LifeCare Hospital", category: "Healthcare", image:bizHospital, rating: 4.9, reviewCount: 156, price: "₹₹₹", location: "Civil Lines, Ludhiana", hours: "24/7 Emergency" },
+  { name: "Fashion Hub Mall", category: "Shopping", image: bizMall, rating: 4.6, reviewCount: 189, price: "₹₹", location: "Sarabha Nagar, Ludhiana", hours: "Open until 10:00 PM" },
+  { name: "LifeCare Hospital", category: "Healthcare", image: bizHospital, rating: 4.9, reviewCount: 156, price: "₹₹₹", location: "Civil Lines, Ludhiana", hours: "24/7 Emergency" },
   { name: "Gold Gym Fitness", category: "Fitness", image: bizGym, rating: 4.7, reviewCount: 98, price: "₹₹", location: "Dugri, Ludhiana", hours: "Open until 10:00 PM" },
 ];
 
