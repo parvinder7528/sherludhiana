@@ -610,7 +610,7 @@ const PropertiesPage = () => {
             Showing <strong style={{ color: "#111" }}>{filtered.length}</strong> propert{filtered.length !== 1 ? "ies" : "y"}
             {selectedArea !== "All Areas" && <> in <strong style={{ color: "#D85A30" }}>{selectedArea}</strong></>}
           </p>
-          <button
+          {/* <button
             onClick={() => navigate("/list-your-business")}
             style={{
               display: "flex", alignItems: "center", gap: "6px",
@@ -623,7 +623,7 @@ const PropertiesPage = () => {
               <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
             Post Property Free
-          </button>
+          </button> */}
         </div>
 
         {/* ── Grid View ── */}
@@ -706,7 +706,7 @@ const PropertiesPage = () => {
               List for free · Reach thousands of buyers in Ludhiana
             </p>
           </div>
-          <button
+          {/* <button
             onClick={() => navigate("/list-your-business")}
             style={{
               padding: "13px 32px",
@@ -717,7 +717,7 @@ const PropertiesPage = () => {
             }}
           >
             Post Property — It's Free
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
