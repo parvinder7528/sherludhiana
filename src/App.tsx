@@ -23,6 +23,7 @@ import SellProperty from "./components/SellProperty.tsx";
 import BuyPropertiesPage from "./components/Buypropertiespage.tsx";
 import RentPropertiesPage from "./components/Rentpropertiespage.tsx";
 import PropertiesPage from "./components/PropertyPage.tsx";
+import LoginPage from "./components/Login.tsx";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,9 @@ const App = () => (
              <Route path="/buy-property" element={<BuyPropertiesPage />} />
              <Route path="/rent-property" element={<RentPropertiesPage />} />
              <Route path="/properties" element={<PropertiesPage />} />
+             <Route path="/login" element={<LoginPage />} />
+
+             
 
 
 
