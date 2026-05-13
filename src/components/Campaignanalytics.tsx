@@ -177,9 +177,9 @@ const trafficSources = [
 ];
 
 const topHours = [
-  { label: "9:00 AM – 12:00 PM", value: 15832, pct: 100 },
-  { label: "2:00 PM – 5:00 PM", value: 12665, pct: 80 },
-  { label: "6:00 PM – 9:00 PM", value: 9951, pct: 63 },
+  { label: "9 AM – 12 PM", value: 15832, pct: 100 },
+  { label: "2 PM – 5 PM", value: 12665, pct: 80 },
+  { label: "6 PM – 9 PM", value: 9951, pct: 63 },
   { label: "Other Hours", value: 6786, pct: 43 },
 ];
 
@@ -194,7 +194,7 @@ function MetricCard({
   sub,
 }: (typeof metrics)[0]) {
   return (
-    <div className="bg-white border border-gray-100 rounded-xl p-5 flex flex-col gap-3">
+    <div className="bg-white border border-gray-100 rounded-xl p-4 flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div
           className="w-9 h-9 rounded-lg flex items-center justify-center"
@@ -205,9 +205,9 @@ function MetricCard({
         <span className="text-xs font-medium text-green-600">{badge}</span>
       </div>
       <div>
-        <p className="text-2xl font-semibold text-gray-900 leading-tight">{value}</p>
+        <p className="text-xl md:text-2xl font-semibold text-gray-900 leading-tight">{value}</p>
         <p className="text-sm font-medium text-gray-800 mt-0.5">{label}</p>
-        <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+        <p className="text-xs text-gray-400 mt-0.5 hidden sm:block">{sub}</p>
       </div>
     </div>
   );
@@ -264,46 +264,47 @@ export default function CampaignAnalytics() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
 
         {/* Top bar */}
-        <div className="flex items-start justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6 sm:mb-8">
           <div>
             <a href="/dashboard" className="text-sm text-orange-500 hover:underline flex items-center gap-1 mb-1.5">
               ← Back to Dashboard
             </a>
-            <h1 className="text-2xl font-semibold text-gray-900">Campaign Analytics</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Campaign Analytics</h1>
             <p className="text-sm text-gray-500 mt-0.5">Track your campaign performance and ROI</p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="text-sm px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-gray-700 flex items-center gap-1.5 hover:bg-gray-50 transition-colors">
+            <button className="text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-gray-700 flex items-center gap-1.5 hover:bg-gray-50 transition-colors">
               Last 7 Days
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} width={12} height={12}>
                 <path d="M4 6l4 4 4-4" />
               </svg>
             </button>
-            <button className="text-sm px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-gray-700 flex items-center gap-1.5 hover:bg-gray-50 transition-colors">
+            <button className="text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-gray-700 flex items-center gap-1.5 hover:bg-gray-50 transition-colors">
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} width={14} height={14}>
                 <path d="M8 2v8M5 7l3 3 3-3M3 11v2a1 1 0 001 1h8a1 1 0 001-1v-2" />
               </svg>
-              Export Report
+              <span className="hidden sm:inline">Export Report</span>
+              <span className="sm:hidden">Export</span>
             </button>
           </div>
         </div>
 
-        {/* Metrics grid */}
-        <div className="grid grid-cols-3 gap-3 mb-5">
+        {/* Metrics grid — 2 cols on mobile, 3 on md+ */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5">
           {metrics.map((m) => (
             <MetricCard key={m.label} {...m} />
           ))}
         </div>
 
-        {/* Bottom section */}
-        <div className="grid grid-cols-5 gap-4">
+        {/* Bottom section — stacked on mobile, side-by-side on lg+ */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
 
           {/* Performance Trends chart */}
-          <div className="col-span-3 bg-white border border-gray-100 rounded-xl p-5">
-            <div className="flex items-start justify-between mb-5">
+          <div className="lg:col-span-3 bg-white border border-gray-100 rounded-xl p-4 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
               <div>
                 <p className="text-sm font-semibold text-gray-900">Performance Trends</p>
                 <p className="text-xs text-gray-400 mt-0.5">Daily metrics overview</p>
@@ -313,7 +314,7 @@ export default function CampaignAnalytics() {
                   <button
                     key={t.key}
                     onClick={() => setActiveTab(t.key)}
-                    className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                    className={`text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all ${
                       activeTab === t.key
                         ? "bg-gray-100 border-gray-200 text-gray-800 font-medium"
                         : "border-gray-100 text-gray-500 hover:bg-gray-50"
@@ -325,7 +326,7 @@ export default function CampaignAnalytics() {
               </div>
             </div>
 
-            <div className="h-48">
+            <div className="h-44 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -347,27 +348,27 @@ export default function CampaignAnalytics() {
               </ResponsiveContainer>
             </div>
 
-            <div className="flex gap-8 pt-4 border-t border-gray-100 mt-4">
-              <div className="text-center">
-                <p className="text-lg font-semibold text-blue-500">34,100</p>
+            <div className="flex gap-4 sm:gap-8 pt-4 border-t border-gray-100 mt-4">
+              <div className="text-center flex-1">
+                <p className="text-base sm:text-lg font-semibold text-blue-500">34,100</p>
                 <p className="text-xs text-gray-400 mt-0.5">Total Views</p>
               </div>
-              <div className="text-center">
-                <p className="text-lg font-semibold text-teal-600">9,740</p>
+              <div className="text-center flex-1">
+                <p className="text-base sm:text-lg font-semibold text-teal-600">9,740</p>
                 <p className="text-xs text-gray-400 mt-0.5">Total Clicks</p>
               </div>
-              <div className="text-center">
-                <p className="text-lg font-semibold text-violet-500">2,759</p>
+              <div className="text-center flex-1">
+                <p className="text-base sm:text-lg font-semibold text-violet-500">2,759</p>
                 <p className="text-xs text-gray-400 mt-0.5">Total Conversions</p>
               </div>
             </div>
           </div>
 
-          {/* Right column */}
-          <div className="col-span-2 flex flex-col gap-4">
+          {/* Right column — stacks below chart on mobile */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
 
             {/* Traffic Sources */}
-            <div className="bg-white border border-gray-100 rounded-xl p-5">
+            <div className="bg-white border border-gray-100 rounded-xl p-4 sm:p-5">
               <p className="text-sm font-semibold text-gray-900 mb-4">Traffic Sources</p>
               {trafficSources.map((s) => (
                 <TrafficItem key={s.name} {...s} />
@@ -375,18 +376,18 @@ export default function CampaignAnalytics() {
             </div>
 
             {/* Top Performing Hours */}
-            <div className="bg-white border border-gray-100 rounded-xl p-5">
+            <div className="bg-white border border-gray-100 rounded-xl p-4 sm:p-5">
               <p className="text-sm font-semibold text-gray-900 mb-4">Top Performing Hours</p>
               {topHours.map((h) => (
                 <div key={h.label} className="flex items-center gap-2 mb-2.5 last:mb-0">
-                  <span className="text-xs text-gray-500 w-32 flex-shrink-0">{h.label}</span>
+                  <span className="text-xs text-gray-500 w-24 sm:w-32 flex-shrink-0">{h.label}</span>
                   <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full bg-orange-400 transition-all duration-500"
                       style={{ width: `${h.pct}%` }}
                     />
                   </div>
-                  <span className="text-xs font-medium text-gray-700 w-12 text-right">
+                  <span className="text-xs font-medium text-gray-700 w-10 sm:w-12 text-right">
                     {h.value.toLocaleString()}
                   </span>
                 </div>
